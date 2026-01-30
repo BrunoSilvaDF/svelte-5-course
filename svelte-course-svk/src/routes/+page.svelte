@@ -3,7 +3,7 @@
 	import Counter from '$lib/components/Counter.svelte';
 	import DisplayName from '$lib/components/DisplayName.svelte';
 	import RandomNumber from '$lib/components/RandomNumber.svelte';
-	import { AlarmClock, Search } from 'lucide-svelte';
+	import { AlarmCheck, AlarmClock, Search } from 'lucide-svelte';
 </script>
 
 <!-- <DisplayName /> -->
@@ -12,11 +12,17 @@
 	<Search />
 {/snippet}
 
-<Button>
-	{#snippet left()}
-		<Search />
+<Button size="lg" shadow={true} class={{ 'my-custom-class': true }}>
+	{#snippet left(isHovered: boolean)}
+		{#if isHovered}
+			<Search />
+		{:else}
+			<AlarmCheck />
+		{/if}
 	{/snippet}
-	Meu Botão com Ícone
+	{#snippet children(isHovered: boolean)}
+		Text {isHovered}
+	{/snippet}
 	{#snippet right()}
 		<AlarmClock />
 	{/snippet}
