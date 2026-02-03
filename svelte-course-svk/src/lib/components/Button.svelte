@@ -1,27 +1,46 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
 
 	let isLeftHovered = $state(false);
 
-	interface Props {
+	type Props = HTMLButtonAttributes & {
 		left?: Snippet<[boolean]>;
 		right?: Snippet;
 		children: Snippet<[boolean]>;
 		size?: 'sm' | 'lg';
 		shadow?: boolean;
-	}
+		bgColor?: string;
+		textColor?: string;
+		onLeftHover?: () => void;
+	};
 
-	let { left, right, children, size = 'sm', shadow = false, class: _class }: Props = $props();
+	let {
+		left,
+		right,
+		children,
+		size = 'sm',
+		shadow = false,
+		class: _class,
+		onLeftHover,
+		...props
+	}: Props = $props();
 </script>
 
 <!-- <button class:sm={size === 'sm'} class:lg={size === 'lg'} class:shadow> -->
 <!-- <button class={{ sm: size === 'sm', lg: size === 'lg', shadow }}> -->
-<button class={[size === 'sm' && 'sm', size === 'lg' && 'lg', shadow && 'shadow', _class]}>
+<button
+	class={[size === 'sm' && 'sm', size === 'lg' && 'lg', shadow && 'shadow', _class]}
+	{...props}
+>
 	{#if left}
 		<div
 			role="presentation"
 			class="left"
-			onmouseenter={() => (isLeftHovered = true)}
+			onmouseenter={() => {
+				onLeftHover?.();
+				isLeftHovered = true;
+			}}
 			onmouseleave={() => (isLeftHovered = false)}
 		>
 			{@render left(isLeftHovered)}
@@ -41,8 +60,8 @@
 		align-items: center;
 		justify-content: center;
 		padding: 0.5rem 1rem;
-		background-color: #007bff;
-		color: white;
+		background-color: var(--btnBgColor, #007bff);
+		color: var(--btnTextColor, #fff);
 		border: none;
 		border-radius: 4px;
 		cursor: pointer;
@@ -74,7 +93,6 @@
 		.left {
 			margin-inline-end: 10px;
 		}
-
 		.right {
 			margin-inline-start: 10px;
 		}

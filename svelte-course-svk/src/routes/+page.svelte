@@ -12,18 +12,33 @@
 	<Search />
 {/snippet}
 
-<Button size="lg" shadow={true} class={{ 'my-custom-class': true }}>
-	{#snippet left(isHovered: boolean)}
-		{#if isHovered}
-			<Search />
-		{:else}
-			<AlarmCheck />
-		{/if}
-	{/snippet}
-	{#snippet children(isHovered: boolean)}
-		Text {isHovered}
-	{/snippet}
-	{#snippet right()}
-		<AlarmClock />
-	{/snippet}
-</Button>
+<div class="wrapper">
+	<Button
+		size="lg"
+		shadow
+		--btnBgColor="yellow"
+		--btnTextColor="black"
+		onclick={() => alert('Clicked!')}
+		onLeftHover={() => alert('Left hovered!')}
+	>
+		{#snippet left(isHovered: boolean)}
+			{#if isHovered}
+				<Search />
+			{:else}
+				<AlarmCheck />
+			{/if}
+		{/snippet}
+		Text
+		{#snippet right()}
+			<AlarmClock />
+		{/snippet}
+	</Button>
+</div>
+
+<style>
+	:global {
+		body {
+			background-color: #222;
+		}
+	}
+</style>
