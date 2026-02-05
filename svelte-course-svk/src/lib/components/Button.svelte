@@ -1,10 +1,13 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { HTMLButtonAttributes } from 'svelte/elements';
+	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
 
 	let isLeftHovered = $state(false);
 
-	type Props = HTMLButtonAttributes & {
+	type Props = (
+		| (HTMLButtonAttributes & { href?: never })
+		| (HTMLAnchorAttributes & { href: string })
+	) & {
 		left?: Snippet<[boolean]>;
 		right?: Snippet;
 		children: Snippet<[boolean]>;
@@ -14,6 +17,8 @@
 		textColor?: string;
 		onLeftHover?: () => void;
 	};
+
+	let btn: HTMLButtonElement | HTMLAnchorElement;
 
 	let {
 		left,
@@ -25,37 +30,49 @@
 		onLeftHover,
 		...props
 	}: Props = $props();
+
+	export function focus() {
+		btn.focus();
+	}
+
+	export function getButton() {
+		return btn;
+	}
 </script>
 
 <!-- <button class:sm={size === 'sm'} class:lg={size === 'lg'} class:shadow> -->
 <!-- <button class={{ sm: size === 'sm', lg: size === 'lg', shadow }}> -->
-<button
-	class={[size === 'sm' && 'sm', size === 'lg' && 'lg', shadow && 'shadow', _class]}
+<svelte:element
+	this={props.href ? 'a' : 'button'}
+	bind:this={btn}
+	class={['button', size === 'sm' && 'sm', size === 'lg' && 'lg', shadow && 'shadow', _class]}
 	{...props}
 >
-	{#if left}
-		<div
-			role="presentation"
-			class="left"
-			onmouseenter={() => {
-				onLeftHover?.();
-				isLeftHovered = true;
-			}}
-			onmouseleave={() => (isLeftHovered = false)}
-		>
-			{@render left(isLeftHovered)}
-		</div>
-	{/if}
-	{@render children(isLeftHovered)}
-	{#if right}
-		<div class="right">
-			{@render right()}
-		</div>
-	{/if}
-</button>
+	<div class="flex">
+		{#if left}
+			<div
+				role="presentation"
+				class="left"
+				onmouseenter={() => {
+					onLeftHover?.();
+					isLeftHovered = true;
+				}}
+				onmouseleave={() => (isLeftHovered = false)}
+			>
+				{@render left(isLeftHovered)}
+			</div>
+		{/if}
+		{@render children(isLeftHovered)}
+		{#if right}
+			<div class="right">
+				{@render right()}
+			</div>
+		{/if}
+	</div>
+</svelte:element>
 
 <style lang="scss">
-	button {
+	.button {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -65,7 +82,17 @@
 		border: none;
 		border-radius: 4px;
 		cursor: pointer;
+		display: inline-block;
 		font-size: 1rem;
+		font-family: sans-serif;
+		text-decoration: none;
+
+		.flex {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 100%;
+		}
 
 		&:hover {
 			background-color: #0056b3;

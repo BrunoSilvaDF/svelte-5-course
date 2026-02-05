@@ -4,6 +4,12 @@
 	import DisplayName from '$lib/components/DisplayName.svelte';
 	import RandomNumber from '$lib/components/RandomNumber.svelte';
 	import { AlarmCheck, AlarmClock, Search } from 'lucide-svelte';
+
+	let btn: Button;
+
+	$effect(() => {
+		console.log('Button component instance:', btn.getButton());
+	});
 </script>
 
 <!-- <DisplayName /> -->
@@ -13,26 +19,38 @@
 {/snippet}
 
 <div class="wrapper">
-	<Button
-		size="lg"
-		shadow
-		--btnBgColor="yellow"
-		--btnTextColor="black"
-		onclick={() => alert('Clicked!')}
-		onLeftHover={() => alert('Left hovered!')}
+	<div
+		role="presentation"
+		onclick={(e) => {
+			e.stopPropagation();
+			console.log('evt comming from div');
+		}}
 	>
-		{#snippet left(isHovered: boolean)}
-			{#if isHovered}
-				<Search />
-			{:else}
-				<AlarmCheck />
-			{/if}
-		{/snippet}
-		Text
-		{#snippet right()}
-			<AlarmClock />
-		{/snippet}
-	</Button>
+		<Button
+			bind:this={btn}
+			href="https://svelte.dev"
+			size="lg"
+			shadow
+			--btnBgColor="yellow"
+			--btnTextColor="black"
+			onclick={(e) => {
+				e.stopPropagation();
+				console.log('evt comming from button');
+			}}
+		>
+			{#snippet left(isHovered: boolean)}
+				{#if isHovered}
+					<Search />
+				{:else}
+					<AlarmCheck />
+				{/if}
+			{/snippet}
+			Text
+			{#snippet right()}
+				<AlarmClock />
+			{/snippet}
+		</Button>
+	</div>
 </div>
 
 <style>
