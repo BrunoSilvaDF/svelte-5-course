@@ -1,57 +1,32 @@
 <script lang="ts">
-	import Button from '$lib/components/Button.svelte';
-	import Counter from '$lib/components/Counter.svelte';
-	import DisplayName from '$lib/components/DisplayName.svelte';
-	import RandomNumber from '$lib/components/RandomNumber.svelte';
-	import { AlarmCheck, AlarmClock, Search } from 'lucide-svelte';
+	const target = {
+		firstName: 'Bruno',
+		lastName: 'Santos',
+		occupations: [],
+		set occupation(value: string) {
+			this.occupations.push(value);
+		},
+		get fullName() {
+			return `${this.firstName} ${this.lastName}`;
+		}
+	};
 
-	let btn: Button;
-
-	$effect(() => {
-		console.log('Button component instance:', btn.getButton());
+	const proxy = new Proxy(target, {
+		get(target, prop) {
+			// console.log('target, prop :>> ', target, prop);
+			return prop in target ? target[prop as keyof typeof target] : 'Nah';
+		},
+		set(target, prop, value) {
+			console.log('target, prop, value :>> ', target, prop, value);
+			target[prop] = value;
+			return true;
+		}
 	});
+
+	console.log(proxy.firstnamess);
 </script>
 
-<!-- <DisplayName /> -->
-
-{#snippet left()}
-	<Search />
-{/snippet}
-
-<div class="wrapper">
-	<div
-		role="presentation"
-		onclick={(e) => {
-			e.stopPropagation();
-			console.log('evt comming from div');
-		}}
-	>
-		<Button
-			bind:this={btn}
-			href="https://svelte.dev"
-			size="lg"
-			shadow
-			--btnBgColor="yellow"
-			--btnTextColor="black"
-			onclick={(e) => {
-				e.stopPropagation();
-				console.log('evt comming from button');
-			}}
-		>
-			{#snippet left(isHovered: boolean)}
-				{#if isHovered}
-					<Search />
-				{:else}
-					<AlarmCheck />
-				{/if}
-			{/snippet}
-			Text
-			{#snippet right()}
-				<AlarmClock />
-			{/snippet}
-		</Button>
-	</div>
-</div>
+hau
 
 <style>
 	:global {
