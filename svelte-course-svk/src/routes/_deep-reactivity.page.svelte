@@ -9,16 +9,31 @@
 		adress: { city: 'Brasilia', street: 'Eixo Monumental' }
 	});
 
-	// $inspect(obj).with(console.trace);
-
+	$effect(() => {
+		console.log('obj effect');
+		console.log(obj);
+	});
+	$effect(() => {
+		console.log('obj.name effect');
+		console.log(obj.name);
+	});
+	$effect(() => {
+		console.log('obj.adress.city');
+		console.log(obj.adress.city);
+	});
+	$effect(() => {
+		console.log('array');
+		console.log(array[0]);
+	});
+	$effect(() => {
+		console.log('array.length');
+		console.log(array.length);
+	});
 	// $effect(() => {
-	// 	$inspect.trace();
-	// 	console.log(obj.name);
-	// 	console.log(obj.adress.city);
+	// 	// array.push(1);
 	// });
 </script>
 
-{@debug obj, array}
 <h2>{obj.name}</h2>
 <h2>{obj.adress.city}</h2>
 
@@ -31,14 +46,6 @@
 		array[1] = Math.random() * 10;
 	}}>Add to array</button
 >
-
-<button
-	onclick={() => {
-		console.log($state.snapshot(obj));
-	}}
->
-	Log Snapshot
-</button>
 
 <style>
 	:global {
