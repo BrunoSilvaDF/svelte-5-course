@@ -16,11 +16,12 @@
 </script>
 
 <div class="notification">
+	<input type="text" bind:value={notification.title} />
 	<h5>{notification.title}</h5>
 	<p>{notification.body}</p>
-	<time datetime={new Date(notification.date).toISOString()}
-		>{new Date(notification.date).toLocaleDateString()}</time
-	>
+	<time datetime={new Date(notification.date).toISOString()}>
+		{new Date(notification.date).toLocaleDateString()}
+	</time>
 	<div class="actions">
 		<Button --btnBgColor="rgb(218, 84, 84)" onclick={() => onremove?.(notification.id)}>
 			Remove
