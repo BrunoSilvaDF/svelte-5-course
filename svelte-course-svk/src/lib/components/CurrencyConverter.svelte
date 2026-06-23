@@ -5,7 +5,8 @@
 	let baseCurrency = $state('usd');
 	let baseRates = $derived(dummyRates[baseCurrency]);
 	let targetCurrency = $state('eur');
-	let targetValue: number | undefined = $state(calculateTarget());
+	// let targetValue: number | undefined = $state(calculateTarget());
+    let targetValue: number | undefined = $derived(calculateTarget());
 
 	function calculateTarget() {
 		return baseValue && baseRates[targetCurrency] && baseValue * baseRates[targetCurrency];
@@ -72,7 +73,7 @@
 	<div class="target">
 		<input
 			type="number"
-			value={targetValue}
+			bind:value={targetValue}
 			oninput={(e) => {
 				targetValue = (e.target as HTMLInputElement).valueAsNumber;
 				baseValue = calculateBase();
